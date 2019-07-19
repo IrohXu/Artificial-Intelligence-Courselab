@@ -1,0 +1,46 @@
+def succAndProbReward(self, state, action):
+        # BEGIN_YOUR_CODE (our solution is 53 lines of code, but don't worry if you deviate from this)
+        totalValue, peekedIndex, deckCardNum = state
+        solution = []
+        if deckCardNum == None:
+            return []
+        if action == 'Take':
+            if peekedIndex == None:
+                for i in range(len(deckCardNum)):
+                    tempdeckCardNum = list(deckCardNum)
+                    T = float(deckCardNum[i])/sum(deckCardNum)
+                    if tempdeckCardNum[i] >= 1:
+                        if totalValue + self.cardValues[i] > self.threshold:
+                            solution.append(((totalValue + self.cardValues[i], None, None), T, 0))
+                            continue
+                        tempdeckCardNum[i] = tempdeckCardNum[i] - 1
+                        if sum(tempdeckCardNum) == 0:
+                            solution.append(((totalValue + self.cardValues[i], None, None), T, totalValue + self.cardValues[i]))
+                        else:
+                            solution.append(((totalValue + self.cardValues[i], None, tuple(tempdeckCardNum)), T, 0))
+                    else:
+                        continue
+            else:
+                if self.cardValues[peekedIndex] + totalValue > self.threshold:
+                    solution.append(((self.cardValues[peekedIndex] + totalValue, None, None), 1, 0))
+                else:
+                    tempdeckCardNum = list(deckCardNum)
+                    tempdeckCardNum[peekedIndex] = tempdeckCardNum[peekedIndex] - 1
+                    if sum(tempdeckCardNum) == 0:
+                        solution.append(((totalValue + self.cardValues[peekedIndex], None, None), 1, totalValue + self.cardValues[peekedIndex]))
+                    else:
+                        solution.append(((totalValue + self.cardValues[peekedIndex], None, tuple(tempdeckCardNum)), 1, 0))
+        
+        elif action == 'Peek':
+            if peekedIndex == None:
+                for i in range(len(deckCardNum)):
+                    if deckCardNum[i] >= 1:
+                        T = float(deckCardNum[i])/sum(deckCardNum)
+                        solution.append(((totalValue, i, deckCardNum) ,T , -self.peekCost))
+                    else:
+                        continue
+            else:
+                return []   # peek twice return []
+        else:
+            solution.append(((totalValue, None, None), 1, totalValue))       
+        return solution
