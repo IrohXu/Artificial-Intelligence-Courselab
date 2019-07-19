@@ -1,2 +1,2 @@
-# Artificial-Intelligence-lab1-search
+# Artificial-Intelligence-lab
 Fudan University‘s Artificial Intelligence Course codes in lab class
